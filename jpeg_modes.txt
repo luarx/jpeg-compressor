@@ -1,0 +1,47 @@
+# JPEG modes
+###
+# Other modes:
+# Default quality (75)
+im.save(f"{folder_destination}/3-default.jpg")
+
+# Default quality optimized
+# Enabling the setting in Pillow responsible for additional file size savings at the cost of CPU time (optimize=True). Due to the nature of the tradeoff being made, this does not impact image quality at all.
+save_args = {}
+save_args['optimize'] = True
+save_args['exif'] = exif_bytes
+im.save(f"{folder_destination}/3-default-optimize.jpg", **save_args)
+
+# Default quality progressive (changes how images are loaded and it can reduce a little bit the file size)
+# This mode increases the number of 0s that might be in a row of pixels (which can be more easily compressed).
+save_args = {}
+save_args['progressive'] = True
+save_args['exif'] = exif_bytes
+im.save(f"{folder_destination}/3-default-progressive.jpg", **save_args)
+
+# Default quality optimize + progressive
+save_args = {}
+save_args['optimize'] = True
+save_args['progressive'] = True
+save_args['exif'] = exif_bytes
+im.save(f"{folder_destination}/3-default-optimize-progressive.jpg", **save_args)
+
+# Quality that is most of the times the best
+save_args = {}
+save_args['quality'] = 85
+save_args['exif'] = exif_bytes
+im.save(f"{folder_destination}/3-quality-85.jpg", **save_args)
+
+# Worst quality
+save_args = {}
+save_args['quality'] = 1
+save_args['exif'] = exif_bytes
+im.save(f"{folder_destination}/3-quality-1.jpg", **save_args)
+
+# Quality is calculated dinamically to know what it is the best to use without affecting so much
+# to the original quality
+save_args = {}
+(quality, ssim) = jpeg_dynamic_quality(im)
+save_args['quality'] = quality
+save_args['optimize'] = True
+save_args['exif'] = exif_bytes
+im.save(f"{folder_destination}/3-quality-optimize-dynamic.jpg", **save_args)
